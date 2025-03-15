@@ -1,43 +1,51 @@
 import streamlit as st
-import os
-import subprocess
 
-def save_to_file(text, filename="user_input.txt"):
-    with open(filename, "a", encoding="utf-8") as file:
-        file.write(text + "\n")
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
 
-def commit_and_push():
-    try:
-        # Настраиваем имя пользователя и email для Git
-        subprocess.run(["git", "config", "--global", "user.name", "aiken.kazin"], check=True)
-        subprocess.run(["git", "config", "--global", "user.email", "aikenkazin@gmail.com"], check=True)
-        
-        # Обновляем локальный репозиторий перед коммитом
-        subprocess.run(["git", "pull", "--rebase"], check=True)
-        
-        # Добавляем изменения и пушим
-        subprocess.run(["git", "add", "user_input.txt"], check=True)
-        subprocess.run(["git", "commit", "-m", "Update user input"], check=True)
-        subprocess.run(["git", "push"], check=True)
-        st.success("Файл успешно сохранен и отправлен в GitHub!")
-    except subprocess.CalledProcessError as e:
-        st.error(f"Ошибка при отправке в GitHub: {e}")
 
-st.title("Сохранение текста в файл и GitHub")
 
+# Specify path to your file with credentials
+path_to_credential = 'ananymousstudent-85f1a15910b7.json' 
+
+# Specify name of table in google sheets
+table_name = 'table'
+
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+
+credentials = ServiceAccountCredentials.from_json_keyfile_name(path_to_credential, scope)
+gs = gspread.authorize(credentials)
+
+work_sheet = gs.open(table_name)
+sheet1 = work_sheet.sheet1
+
+# data = sheet1.get_all_values()
+# headers = data.pop(0)
+
+# df = pd.DataFrame(data, columns=headers)
+# print(df.head())
+
+
+
+
+
+def save_text(text):
+    """Сохраняет введенный текст в файл."""
+    new_row = [text]
+    sheet1.append_row(new_row)
+
+# Заголовок приложения
+st.title("Напишите анонимное сообщение")
+
+# Поле для ввода текста
 user_input = st.text_area("Введите текст:")
 
-if st.button("Отправить"):
-    if user_input.strip():
-        save_to_file(user_input)
-        commit_and_push()
+# Кнопка для отправки
+if st.button("Отправит анонимное сообщение"):
+    if user_input.strip():  # Проверяем, что текст не пустой
+        save_text(user_input)
+        st.success("Текст успешно отправлен!")
     else:
-        st.warning("Введите текст перед отправкой!")
-
-# if st.button("Показать сохраненный текст"):
-#     try:
-#         with open("user_input.txt", "r", encoding="utf-8") as file:
-#             content = file.read()
-#         st.text_area("Содержимое файла:", content, height=300)
-#     except FileNotFoundError:
-#         st.warning("Файл пока пуст или не найден.")
+        st.warning("Введите текст перед отправлением.")
