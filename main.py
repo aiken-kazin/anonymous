@@ -8,14 +8,22 @@ def save_to_file(text, filename="user_input.txt"):
 
 def commit_and_push():
     try:
+        # Настраиваем имя пользователя и email для Git
+        subprocess.run(["git", "config", "--global", "user.name", "aiken-kazin"], check=True)
+        subprocess.run(["git", "config", "--global", "user.email", "aikenkazin@gmail.com"], check=True)
+        
+        # Обновляем локальный репозиторий перед коммитом
+        subprocess.run(["git", "pull", "--rebase"], check=True)
+        
+        # Добавляем изменения и пушим
         subprocess.run(["git", "add", "user_input.txt"], check=True)
         subprocess.run(["git", "commit", "-m", "Update user input"], check=True)
         subprocess.run(["git", "push"], check=True)
         st.success("Файл успешно сохранен и отправлен в GitHub!")
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         st.error(f"Ошибка при отправке в GitHub: {e}")
 
-st.title("Поделитесь своим мнением!! все анонимно")
+st.title("Сохранение текста в файл и GitHub")
 
 user_input = st.text_area("Введите текст:")
 
@@ -33,4 +41,3 @@ if st.button("Отправить"):
 #         st.text_area("Содержимое файла:", content, height=300)
 #     except FileNotFoundError:
 #         st.warning("Файл пока пуст или не найден.")
-
