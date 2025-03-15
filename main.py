@@ -7,7 +7,7 @@ import pandas as pd
 
 
 # Specify path to your file with credentials
-path_to_credential = 'ananymousstudent-85f1a15910b7.json' 
+path_to_credential = 'project2-453818-894de48f5133.json' 
 
 # Specify name of table in google sheets
 table_name = 'table'
