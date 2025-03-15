@@ -9,7 +9,7 @@ def save_to_file(text, filename="user_input.txt"):
 def commit_and_push():
     try:
         # Настраиваем имя пользователя и email для Git
-        subprocess.run(["git", "config", "--global", "user.name", "aiken-kazin"], check=True)
+        subprocess.run(["git", "config", "--global", "user.name", "aiken.kazin"], check=True)
         subprocess.run(["git", "config", "--global", "user.email", "aikenkazin@gmail.com"], check=True)
         
         # Обновляем локальный репозиторий перед коммитом
