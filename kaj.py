@@ -15,9 +15,9 @@ credentials = Credentials.from_service_account_info(credentials_info, scopes=[
 gs = gspread.authorize(credentials)
 
 # Открываем Google Sheet
-table_name = "table"
+table_name = "anon"
 work_sheet = gs.open(table_name)
-sheet1 = work_sheet.sheet2
+sheet1 = work_sheet.sheet1
 
 def save_text(text):
     """Сохраняет введенный текст в Google Sheets."""
