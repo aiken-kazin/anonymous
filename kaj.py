@@ -17,7 +17,7 @@ gs = gspread.authorize(credentials)
 # Открываем Google Sheet
 table_name = "table"
 work_sheet = gs.open(table_name)
-sheet1 = work_sheet.sheet1
+sheet1 = work_sheet.sheet2
 
 def save_text(text):
     """Сохраняет введенный текст в Google Sheets."""
